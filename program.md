@@ -63,8 +63,28 @@ Si pasa todo → paper trade.
   - Drawdown actual
   - Trades por categoría
 
-### Paso 7: Commit y push
-- `git add agent_portfolio.json agent_trades.json agent_state.json`
+### Paso 7: Session log (observaciones, NO cambios)
+Agregar una entrada al final de `research_log.md` con el siguiente formato:
+
+```
+### YYYY-MM-DD HH:MM UTC — Session #[N]
+**Mercados evaluados:** [cuántos pasaron el primer filtro]
+**Trades ejecutados:** [cuántos, o "0 — sin oportunidades"]
+**Posiciones resueltas:** [cuántas, wins/losses]
+**Observaciones:**
+- [Qué patrones estás viendo — qué categorías aparecen más, qué tipo de mercados pasan los filtros]
+- [Si rechazaste un trade interesante, por qué]
+- [Si un trade resolvió, qué aprendiste — ¿el premortem hubiera detectado la pérdida?]
+- [Cualquier anomalía: API lenta, mercados raros, spreads inusuales]
+**Hipótesis para el futuro (NO actuar todavía):**
+- [Ideas que se te ocurren para mejorar la estrategia — documentar, no implementar]
+**Métricas acumuladas:** Win rate X%, P&L $X, Brier score X (si hay suficientes trades resueltos)
+```
+
+IMPORTANTE: Esto es un log de PENSAMIENTO, no de acción. NO modifiques STRATEGY.md basándote en estas observaciones hasta Fase 3. Solo documentá.
+
+### Paso 8: Commit y push
+- `git add agent_portfolio.json agent_trades.json agent_state.json research_log.md`
 - `git commit -m "agent: [N] positions open, [M] new trades, P&L $[X]"`
 - `git push origin main`
 
@@ -74,10 +94,10 @@ Si pasa todo → paper trade.
 - `agent_portfolio.json` — tu portfolio
 - `agent_trades.json` — historial de trades
 - `agent_state.json` — métricas
+- `research_log.md` — SOLO agregar entradas al final (session log), nunca borrar entradas anteriores
 
 ### NUNCA toques:
 - `STRATEGY.md` — solo en Fase 3 (después de 100+ trades)
-- `research_log.md` — solo en Fase 3
 - `paper_trader.py`, `auto_trader.py`, `daily_review.py`, `server.py`
 - `data/` — eso es el portfolio de Ian, no el tuyo
 
