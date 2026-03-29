@@ -1,5 +1,5 @@
 {
-  "total_trades": 0,
+  "total_trades": 1,
   "total_resolved": 0,
   "wins": 0,
   "losses": 0,
@@ -11,7 +11,14 @@
   "max_drawdown": 0,
   "current_drawdown": 0,
   "phase": 1,
-  "last_run": null,
-  "runs_count": 0,
-  "categories": {}
+  "last_run": "2026-03-29T21:00:00+00:00",
+  "runs_count": 1,
+  "categories": {
+    "politics": {
+      "trades": 1,
+      "wins": 0,
+      "losses": 0,
+      "pnl": 0
+    }
+  }
 }

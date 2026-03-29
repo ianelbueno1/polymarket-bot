@@ -1,6 +1,21 @@
 {
-  "balance": 1000.0,
-  "positions": {},
+  "balance": 997.0,
+  "positions": {
+    "dem_house_2026": {
+      "condition_id": "house_2026_democrats",
+      "question": "Which party wins the House in 2026? — Democratic Party",
+      "side": "YES",
+      "shares": 3.529,
+      "avg_price": 0.85,
+      "total_cost": 3.0,
+      "category": "politics",
+      "entry_date": "2026-03-29T21:00:00+00:00",
+      "probability_estimate": 0.91,
+      "market_price": 0.85,
+      "edge_estimate": 0.06,
+      "reasoning": "Historical base rate: opposition party gains House seats in 90% of midterms. Trump approval 40%, D+5.1 generic ballot. Calibration slope 1.31 → real probability ~91%."
+    }
+  },
   "created_at": "2026-03-29T20:00:00+00:00",
   "phase": 1,
   "total_resolved": 0

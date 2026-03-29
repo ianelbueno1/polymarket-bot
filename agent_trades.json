@@ -1,1 +1,17 @@
-[]
+[
+  {
+    "type": "BUY",
+    "condition_id": "house_2026_democrats",
+    "question": "Which party wins the House in 2026? — Democratic Party",
+    "side": "YES",
+    "price": 0.85,
+    "amount": 3.0,
+    "shares": 3.529,
+    "category": "politics",
+    "probability_estimate": 0.91,
+    "market_price": 0.85,
+    "edge_estimate": 0.06,
+    "reasoning": "90% base rate for opposition gaining seats in midterms. Trump approval 40%, D+5.1 generic ballot. Cook Political Report projects D+10-28 seats. Calibration slope 1.31 applied.",
+    "timestamp": "2026-03-29T21:00:00+00:00"
+  }
+]
