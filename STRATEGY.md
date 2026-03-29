@@ -1,181 +1,198 @@
-# Estrategia de Trading — Polymarket Paper Trader
+# Estrategia de Trading — Polymarket
 
-## Filosofía Core
+## Filosofía (3 principios)
 
-**Contrarian + Trend Following**
-- Comprar cuando el mercado entra en pánico PERO la tendencia macro acompaña
-- Vender cuando el mercado está en euforia irracional
-- NUNCA ir contra la tendencia macro de fondo
+1. **El edge viene de sesgos humanos sistemáticos, no de predecir el futuro.** Los mercados sobreprecian certeza (favoritos rinden 84% cuando el mercado dice 90%) y sobreprecian longshots. Esto está probado académicamente (NBER, Kahneman/Tversky Nobel 2002, estudio de 3,587 mercados).
 
-"Be fearful when others are greedy, greedy when others are fearful" — Buffett
-"The trend is your friend until the end" — Ed Seykota
+2. **Ganar poco muchas veces > ganar mucho pocas veces.** Domer ganó $2.5M con 8,000 trades chicos de 10,000 totales. Joe Tay fue rentable con 34% win rate porque ganaba 3x más de lo que perdía. ATLAS: todos los agentes convergieron en cautela independientemente.
+
+3. **Cash es una posición válida.** Si no hay oportunidad clara, no tradear. El bot de DeepSeek perdió todo lo ganado por overtrading en mercado lateral. "Death by a thousand cuts" mata más que los crashes.
 
 ---
 
-## Checklist de Análisis por Mercado
+## Fase actual: FASE 1 — Solo Favorite Compounder (primeras 4 semanas)
 
-### 1. Identificar la tendencia macro
-- ¿Cuál es la dirección de largo plazo? (BTC bull cycle? Tensiones geopolíticas escalando? Elecciones acercándose?)
-- Si la macro dice UP → solo buscar oportunidades de compra en dips
-- Si la macro dice DOWN → solo buscar shorts en rallies
-- Si no hay tendencia clara → NO OPERAR
+Objetivo: juntar 50+ trades para tener data estadísticamente significativa antes de cambiar cualquier cosa.
 
-### 2. Detectar pánico o euforia
-- ¿El precio se movió bruscamente en las últimas horas/días?
-- ¿Hay una noticia que causó sobrerreacción emocional?
-- ¿El volumen 24h subió mucho? (señal de pánico/euforia)
-- ¿El precio está lejos de lo que sería "racional"?
+### Estrategia A: Favorite Compounder
 
-### 3. Medir el edge
-- ¿Cuál creo que es la probabilidad REAL del evento?
-- ¿Cuánto se desvía el precio del mercado de mi estimación?
-- Solo entrar si mi estimación difiere >8% del precio del mercado
-- Ejemplo: si creo que BTC tiene 60% de chance de llegar a $80K pero el mercado dice 40% → edge de 20%
+**Base científica:** Favorite-longshot bias (NBER). Eventos >80% probabilidad ocurren solo 84% del tiempo. Los mercados sobreprecian certeza porque los humanos sobreestiman riesgos raros (Prospect Theory, cableado evolutivo — el cerebro prioriza amenazas de baja probabilidad).
 
-### 4. Doble confirmación
-- ¿Las wallets top están tomando la misma posición? (cuando tengamos tracking)
-- ¿Hay smart money entrando o saliendo?
-- ¿El sentimiento en redes es contrario a lo racional?
+**Mecánica:**
+- Buscar mercados donde un outcome tiene >85% de probabilidad implícita
+- Verificar que la probabilidad real es >90% (basado en datos, no narrativa)
+- Comprar el lado dominante (usualmente NO en longshots, o YES en favoritos claros)
+- Hold hasta resolución — no vender antes
 
----
+**Filtros obligatorios (todos deben pasar):**
+- Probabilidad implícita del lado dominante: >85%
+- Volumen 24h: >$2,000
+- Spread: <6%
+- Resolución: >48 horas (no tradear en últimas 48hs — los bots dominan ahí)
+- Liquidez: >$5,000
+- Resolución criteria: clara y no ambigua (leer como abogado, no como periodista)
 
-## Categorías y Cómo Analizarlas
+**Sizing:**
+- $3 por trade, siempre, sin excepciones
+- Diversificar en 10-20 mercados simultáneos en categorías distintas
 
-### Crypto (Bitcoin, ETH, etc.)
-- Macro: ciclo post-halving, ETF flows, política monetaria Fed
-- Pánico: crashes repentinos, FUD de regulación, hacks
-- Euforia: pumps sin fundamento, FOMO retail
-- Indicadores clave: precio actual vs targets del mercado, proximidad temporal
+**Rendimiento esperado:**
+- ~85% win rate (basado en data de 3,587 mercados)
+- ~5-15% profit por trade ganador ($0.15-0.45 por trade de $3)
+- El riesgo es perder $3 completos en un black swan (~15% del tiempo)
+- Compounding: con 20 trades activos, 17 ganan ~$0.30 = $5.10, 3 pierden $3 = $9.00
+- Net esperado por ronda: -$3.90 ... PERO los trades perdedores no pierden $3 completos
+- Pérdida real promedio en favoritos que fallan: ~$0.45-0.90 (el precio no va a $0, baja a $0.70-0.85)
+- Net esperado ajustado: positivo si la calibración se mantiene
 
-### Geopolítica (Iran, Israel, Rusia, China)
-- Macro: dirección de escalación o desescalación
-- Pánico: ataques sorpresa, declaraciones agresivas
-- Euforia: optimismo de paz sin fundamento real
-- Clave: los mercados sobrereaccionan a noticias de guerra y subestiman diplomacia lenta
+**Categorías permitidas:**
+- Política y geopolítica (más ineficiencia, retail emocional)
+- AI/Tech (gap entre realidad técnica y pricing narrativo)
+- Macro/Economía (cuando hay consenso extremo)
+- Sports (solo cuando resolución es 100% clara)
 
-### Política (elecciones, nominaciones)
-- Macro: tendencias de encuestas, incumbency advantage
-- Pánico: escándalos, gaffes virales
-- Euforia: rallies post-debate, endorsements
-- Clave: candidatos meme siempre están overpriced (la gente apuesta por diversión, no por lógica)
-
-### Sports / Esports
-- Macro: rankings, forma reciente, head-to-head
-- Pánico: equipo pierde primer set/mapa → odds colapsan
-- Euforia: racha ganadora → favorito overpriced
-- Clave: los upsets son más probables de lo que el mercado cree
-
-### Fed / Economía
-- Macro: dot plot, comunicados previos, datos de empleo/inflación
-- Raramente hay edge aquí — el mercado es muy eficiente
-- Solo operar cuando hay consenso extremo (>95%) que podría estar equivocado
+**Categorías PROHIBIDAS:**
+- Crypto price targets a fechas fijas (BTC a $X en marzo) — territorio de bots, lost $170+ acá
+- Mercados con resolución ambigua (leer las rules de resolución ANTES de entrar)
 
 ---
 
-## Gestión de Riesgo
+## Fase 2 (después de 50+ trades): Agregar Contrarian al 10%
 
-### Sizing
-- Trades normales: $3-5 USDC por trade
-- Trades de alta convicción: máximo $10
-- Lottery tickets (muy baja probabilidad, alto payout): $1-2 max
-- NUNCA más de $10 por trade hasta tener data de win rate real
-- Máximo 20% del portfolio por categoría (crypto, geopolítica, política, sports)
+Solo se activa cuando Fase 1 muestra edge positivo real.
 
-### Límites
-- Máximo 40% del portfolio en posiciones abiertas
-- Máximo 15 posiciones simultáneas
-- No más de 20-30% en una sola categoría
-- Stop loss diario: -$50 (para no seguir metiendo trades si el día viene mal)
-- NUNCA promediar para abajo sin info nueva (Livermore)
+### Estrategia B: Contrarian en pánico extremo
 
-### Mercado binario — NO hay stops tradicionales
-- Polymarket paga $1 o $0. No hay "stop loss" como en acciones
-- Si compraste a $0.30, tu downside es $0.30 y tu upside es $0.70 — ya sabés el riesgo al entrar
-- NO vender porque el precio bajó — eso es vender el pánico que querías comprar
-- Solo salir ANTES de resolución si: (1) tu tesis cambió por info nueva, (2) necesitás el capital para mejor oportunidad
-- El sizing al entrar ES tu gestión de riesgo — cuánto ponés = cuánto podés perder
+**Base científica:** Reflexividad de Soros (los precios crean realidad, loops de feedback se amplifican hasta romperse). Máximo consenso = máxima fragilidad (confirmado por ATLAS).
 
-### Asymmetric R/R natural del mercado
-- Comprar a $0.10 → riesgo $0.10, reward $0.90 (9:1)
-- Comprar a $0.30 → riesgo $0.30, reward $0.70 (2.3:1)
-- Comprar a $0.50 → riesgo $0.50, reward $0.50 (1:1)
-- Por eso preferimos comprar en rangos bajos (0.05-0.40) donde el R/R es naturalmente asimétrico
-- "It's not whether you're right or wrong, but how much you make when right" — Soros
+**Mecánica:**
+- Detectar mercados donde el precio se movió >20% en 24-48hs por una noticia
+- Baseline pricing: estimar la probabilidad real SIN mirar el precio actual primero
+- Solo entrar si edge >15% (mi estimación vs precio del mercado)
+- Comprar el lado impopular a precios bajos ($0.05-0.20)
 
-### Kelly Criterion (simplificado)
-- Bet size = (edge / odds) * bankroll * factor_conservador
-- Factor conservador = 0.25 (quarter Kelly)
-- Nunca apostar más del 5% del bankroll en un solo trade
+**Filtros obligatorios:**
+- Edge estimado: >15% (no 8% como antes — los pros usan 15-20%)
+- Solo categorías que entiendo profundamente
+- Resolución criteria 100% clara
+- El evento debe tener un catalizador identificable, no ser "capaz que sí"
+- Puedo explicar mi edge en 1 frase — si no puedo, no entro
+
+**Sizing:**
+- $3 máximo, sin excepciones
+- Max 10% del portfolio en contrarian
+- Max 3 posiciones contrarian simultáneas
+
+**R/R esperado:**
+- Win rate bajo (~30-40%)
+- Pero las ganancias son 3-5x las pérdidas (comprar a $0.10, cobrar $1 = 10:1)
+- Estructura barbell de Taleb: muchas pérdidas chicas, ganancias grandes ocasionales
 
 ---
 
-## Dato clave: Solo 7.6% de wallets en Polymarket son rentables
+## Fase 3 (después de 100+ trades): Activar auto-research
 
-Esto significa que el 92.4% pierde plata. Las razones principales:
-1. Sin gestión de riesgo (apuestas grandes sin stops)
-2. Trading emocional (FOMO, pánico)
-3. Tratar Polymarket como apuesta deportiva en vez de probabilidades
-4. Operar mercados eficientes (Fed, elecciones grandes) donde no hay edge
-5. Overconfidence después de ganar → agrandan posiciones → pierden todo
+Solo se activa cuando hay data estadísticamente significativa.
 
-Nuestro edge: análisis con Claude (sin emociones) + sizing disciplinado + stops asimétricos.
-
-## Favorite-Longshot Bias (validado académicamente)
-- Los longshots (precios bajos) están SISTEMÁTICAMENTE overpriced
-- Los favoritos (precios altos) también están LIGERAMENTE overpriced
-- Esto significa: comprar NO en favoritos extremos (>90c) y comprar YES selectivo en longshots tiene edge matemático
-- Pero cuidado: no todos los longshots son iguales — necesitan análisis real
-
-## Sesgos a Evitar
-
-1. **Confirmation bias** — No buscar solo info que confirme mi tesis
-2. **Recency bias** — No pesar demasiado lo que pasó ayer
-3. **Sunk cost** — Si una posición va mal, cortarla. No promediar para abajo sin razón nueva
-4. **Overconfidence** — Mi estimación también puede estar equivocada
-5. **FOMO** — Si no hay oportunidad clara, NO OPERAR. Cash es una posición válida
-6. **Gambler's fallacy** — Que haya perdido 3 trades seguidos no significa que el próximo va a ganar
+El agente puede proponer UN cambio por semana a esta estrategia, documentado en research_log.md con hipótesis y métricas pre-cambio. Si el cambio empeora resultados en 2 semanas → revertir.
 
 ---
 
-## Checklist Pre-Trade (hacer ANTES de cada trade)
+## Reglas de hierro (no negociables, aplican siempre)
 
-1. **Inversión (Munger):** ¿Cómo pierdo acá? Si no tenés respuesta clara → NO ENTRAR
-2. **Circle of Competence (Buffett):** ¿Puedo explicar en 2 minutos por qué está mispriced? Si no → NO ENTRAR
-3. **Si dudás, no (Naval):** Si no es obvio → NO ENTRAR. La duda es información
-4. **Margin of Safety (Buffett):** ¿Hay colchón grande entre mi estimación y el precio? Si el edge es <8% → NO ENTRAR
-5. **Antifragile (Taleb):** ¿Gano si pasa algo inesperado, o necesito que todo salga perfecto? Si necesitás que todo salga bien → NO ENTRAR
-6. **Test and Scale (Soros):** Empezar con $3. Si la tesis se confirma (precio se mueve a favor), subir a $5-10
+1. **Max $5 por trade.** Los trades de "alta convicción" con sizing grande son los que más te destruyen. BTC $80K con $100 fue el 35% de la pérdida total.
 
-## Trades que NUNCA hacer (Via Negativa — Taleb)
+2. **Max 15% del portfolio en una categoría.** Diversificación = supervivencia. Dalio: 15-20 posiciones no correlacionadas.
 
+3. **Max 20 posiciones abiertas.** Más de eso no se puede monitorear.
+
+4. **NO promediar para abajo.** Si una posición va mal, la tesis estaba equivocada o el timing fue malo. No tirar más plata.
+
+5. **NO escalar posiciones.** Ganar 3 trades seguidos no significa que el próximo va a ganar. Sizing fijo siempre.
+
+6. **Resolución >48hs.** No entrar en mercados que resuelven pronto — los bots dominan los últimos minutos con latency arbitrage.
+
+7. **Leer resolución criteria como abogado.** Domer ($2.5M profit) dijo que su edge real era entender las reglas mejor que el mercado. Si la resolución depende de una tecnicidad → ahí hay edge. Si es ambigua → no entrar.
+
+---
+
+## Pre-trade protocol (60 segundos)
+
+Esto no es opcional. Evidencia: +23% profitability (estudio Dartmouth), +45% adherencia a risk management.
+
+1. **3 respiraciones lentas** — activa sistema nervioso parasimpático
+2. **Rating emocional 1-5** — ¿estoy neutral?
+3. **Si >3 → no tradear.** Sin excepciones.
+4. **¿Pasa todos los filtros obligatorios?** Repasar uno por uno.
+5. **¿Puedo explicar mi edge en 1 frase?** Si no → no.
+6. **Si dudás → no.** La duda es información. "La certeza de que no hay que entrar."
+
+---
+
+## Kill rules
+
+- **3 losses seguidos → pausa 24hs.** No revenge trading.
+- **Win rate <30% después de 30 trades → pausar 1 semana** y revisar todo.
+- **Drawdown >15% → solo Estrategia A** hasta recuperar.
+- **Drawdown >20% → full stop.** Revisar toda la estrategia desde cero.
+- **Alpha decay check mensual:** ¿mis últimos 20 trades son mejores o peores que los 20 anteriores? Si peores → algo cambió en el mercado.
+
+---
+
+## Lo que NO hago (Via Negativa)
+
+- Crypto price targets a fechas fijas (BTC a $X en marzo) — perdí $170 acá
 - Mercados 50/50 sin edge claro (moneda al aire)
-- Mercados ultra eficientes (Fed rate decisions con >95% consenso)
+- Mercados ultra eficientes (Fed rate decisions con >95% consenso, elecciones con data abrumadora)
 - FOMO porque un mercado se movió y "me lo perdí"
-- Promediar para abajo sin info nueva
-- Más de $10 por trade hasta tener win rate real
-- Más de 20% del portfolio en una categoría
-- Cualquier trade que no pase el checklist de arriba
+- Promediar para abajo sin información nueva
+- Escalar sizing después de ganar
+- Tradear por aburrimiento o por "hacer algo"
+- Mercados con <$2K volumen diario o spread >6%
+- Mercados con resolución ambigua o que dependen de interpretación
 
-## Post-Trade Review (Pain + Reflection — Dalio)
+---
 
-Después de cada trade que resuelve (win o loss), anotar:
-- ¿Qué asumí que era cierto?
-- ¿Lo era?
-- ¿Lo repetiría sabiendo lo que sé ahora?
-- ¿Qué regla nueva sale de esto?
+## Modelos mentales de referencia
 
-## Formato del Análisis Diario
+**Dalio:** No predecir, prepararse para cualquier escenario. 15-20 posiciones no correlacionadas.
 
-Cada sesión Claude debe:
+**Paul Tudor Jones:** "Defense wins championships." Solo 5:1 R/R mínimo. "I'm always thinking about losing money."
 
-1. **Status check**: Precio actual de cada posición, P&L, si hay que cerrar algo
-2. **Mercados nuevos**: Top 10 oportunidades rankeadas por edge estimado
-3. **Para cada trade propuesto**:
-   - Mercado y pregunta
-   - Side (YES/NO) y precio actual
-   - Mi estimación de probabilidad real vs precio del mercado
-   - Tendencia macro que respalda
-   - Señal contrarian (qué pánico/euforia estoy explotando)
-   - Monto sugerido y por qué
-   - Riesgo principal (qué podría salir mal)
-4. **Resumen**: trades propuestos en tabla para aprobación rápida
+**Soros:** Los precios crean realidad. Máximo consenso = máxima fragilidad. Probe small, press when confirmed, exit decisively.
+
+**Livermore:** "It never was my thinking that made the big money. It was my sitting." Hold hasta resolución.
+
+**Taleb:** Barbell — 90% ultra-seguro, 10% asimétrico. Ser antifragile: ganar cuando lo inesperado pasa.
+
+**Seykota:** Los traders pierden porque inconscientemente buscan emoción, no profit. El agente autónomo elimina la emoción.
+
+---
+
+## Contexto biológico (por qué funciona)
+
+- **Favorite-longshot bias** existe porque el cerebro sobrepondera eventos raros (cableado evolutivo, Prospect Theory)
+- **Estacionalidad** es real: menos luz solar → menos serotonina → más aversión al riesgo → precios más bajos en otoño/invierno (Lambert 2002, The Lancet). Esto aplica al hemisferio del trader.
+- **Alpha decay** es inevitable (~12 meses half-life). Toda estrategia muere. Red Queen hypothesis: tenés que evolucionar constantemente solo para mantener tu posición. Auto-research no es un lujo, es supervivencia.
+- **Régimen changes** rompen todo. En crisis, los loops de auto-mejora son demasiado lentos (ATLAS: 0% éxito en COVID, -30% en rate tightening). Si hay crisis → cash.
+
+---
+
+## Datos de Polymarket
+
+- Solo 7.6% de wallets son rentables
+- 14 de los 20 top wallets son bots
+- 41% de condiciones tienen oportunidades de arbitraje
+- Política y geopolítica tienen más ineficiencia (info asimétrica, retail emocional, resolución ambigua)
+- Time decay toward 50% en contratos lejanos (edge en largo plazo)
+- Los spreads se comprimieron de 4.2¢ (ene 2025) a 2.4¢ (ago 2025) — el mercado se vuelve más eficiente cada mes
+
+---
+
+## Post-trade review (después de cada trade que resuelve)
+
+1. ¿Qué asumí que era cierto?
+2. ¿Lo era?
+3. ¿Seguí las reglas de hierro?
+4. ¿Lo repetiría sabiendo lo que sé ahora?
+5. ¿Sale alguna regla nueva de esto?

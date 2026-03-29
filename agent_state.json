@@ -1,0 +1,17 @@
+{
+  "total_trades": 0,
+  "total_resolved": 0,
+  "wins": 0,
+  "losses": 0,
+  "win_rate": 0,
+  "total_pnl": 0,
+  "avg_win": 0,
+  "avg_loss": 0,
+  "win_loss_ratio": 0,
+  "max_drawdown": 0,
+  "current_drawdown": 0,
+  "phase": 1,
+  "last_run": null,
+  "runs_count": 0,
+  "categories": {}
+}
