@@ -1,0 +1,60 @@
+{
+  "generated_at": "2026-03-29T18:30:04.660873+00:00",
+  "portfolio": {
+    "balance": 713.0068305390625,
+    "open_positions": 1,
+    "total_value_approx": 713.0068305390625,
+    "return_pct": -28.7
+  },
+  "all_time": {
+    "total_trades": 13,
+    "wins": 2,
+    "losses": 10,
+    "win_rate": 15.4,
+    "total_pnl": -281.98,
+    "avg_pnl": -21.69,
+    "avg_win": 0.86,
+    "avg_loss": 28.37,
+    "win_loss_ratio": 0.03,
+    "best_trade": 1.54,
+    "worst_trade": -97.59
+  },
+  "last_7_days": {
+    "total_trades": 10,
+    "wins": 1,
+    "losses": 9,
+    "win_rate": 10.0,
+    "total_pnl": -257.56,
+    "avg_pnl": -25.76,
+    "avg_win": 0.19,
+    "avg_loss": 28.64,
+    "win_loss_ratio": 0.01,
+    "best_trade": 0.19,
+    "worst_trade": -97.59
+  },
+  "last_30_days": {
+    "total_trades": 13,
+    "wins": 2,
+    "losses": 10,
+    "win_rate": 15.4,
+    "total_pnl": -281.98,
+    "avg_pnl": -21.69,
+    "avg_win": 0.86,
+    "avg_loss": 28.37,
+    "win_loss_ratio": 0.03,
+    "best_trade": 1.54,
+    "worst_trade": -97.59
+  },
+  "sizing_adherence": {
+    "total_buys": 14,
+    "within_limits": 9,
+    "oversized": 5,
+    "adherence_pct": 64.3
+  },
+  "bot_state": {
+    "total_pnl": -281.99316946093745,
+    "daily_pnl": 0,
+    "signals_generated": 35,
+    "trades_executed": 5
+  }
+}

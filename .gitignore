@@ -1,0 +1,17 @@
+# Data de trading (estado mutable, no va en git)
+data/portfolio.json
+data/trades.json
+data/bot_state.json
+data/bot_log.json
+
+# Snapshots van al repo (el agente remoto los necesita)
+# data/snapshots/ SI se commitea
+
+# Python
+__pycache__/
+*.pyc
+.env
+
+# OS
+Thumbs.db
+.DS_Store

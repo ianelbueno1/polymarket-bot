@@ -1,0 +1,182 @@
+{
+  "generated_at": "2026-03-29T18:30:04.660873+00:00",
+  "portfolio": {
+    "balance": 713.0068305390625,
+    "open_positions": 1,
+    "total_value_approx": 713.0068305390625,
+    "return_pct": -28.7
+  },
+  "all_time": {
+    "total_trades": 13,
+    "wins": 2,
+    "losses": 10,
+    "win_rate": 15.4,
+    "total_pnl": -281.98,
+    "avg_pnl": -21.69,
+    "avg_win": 0.86,
+    "avg_loss": 28.37,
+    "win_loss_ratio": 0.03,
+    "best_trade": 1.54,
+    "worst_trade": -97.59
+  },
+  "last_7_days": {
+    "total_trades": 10,
+    "wins": 1,
+    "losses": 9,
+    "win_rate": 10.0,
+    "total_pnl": -257.56,
+    "avg_pnl": -25.76,
+    "avg_win": 0.19,
+    "avg_loss": 28.64,
+    "win_loss_ratio": 0.01,
+    "best_trade": 0.19,
+    "worst_trade": -97.59
+  },
+  "last_30_days": {
+    "total_trades": 13,
+    "wins": 2,
+    "losses": 10,
+    "win_rate": 15.4,
+    "total_pnl": -281.98,
+    "avg_pnl": -21.69,
+    "avg_win": 0.86,
+    "avg_loss": 28.37,
+    "win_loss_ratio": 0.03,
+    "best_trade": 1.54,
+    "worst_trade": -97.59
+  },
+  "sizing_adherence": {
+    "total_buys": 14,
+    "within_limits": 9,
+    "oversized": 5,
+    "adherence_pct": 64.3
+  },
+  "bot_state": {
+    "total_pnl": -281.99316946093745,
+    "daily_pnl": 0,
+    "signals_generated": 35,
+    "trades_executed": 5
+  },
+  "recent_trades": [
+    {
+      "type": "SELL",
+      "condition_id": "0x61ce3773237a948584e422de72265f937034af418a8b703e3a860ea62e59ff36",
+      "question": "Will the Iranian regime fall by March 31?",
+      "side": "NO",
+      "price": 0.9905,
+      "proceeds": 5.1885804085908855,
+      "shares": 5.238344683080147,
+      "pnl": 0.19,
+      "pnl_pct": 3.8,
+      "timestamp": "2026-03-25T18:06:28.835150+00:00"
+    },
+    {
+      "type": "SELL",
+      "condition_id": "0x844c6215079483f67667b86e4111b6acc24d17094b5eaaaa2e021268585e1d5e",
+      "question": "Will Bitcoin reach $85,000 in March?",
+      "side": "YES",
+      "price": 0.0095,
+      "proceeds": 3.2758620689655173,
+      "shares": 344.82758620689657,
+      "pnl": -46.72,
+      "pnl_pct": -93.4,
+      "timestamp": "2026-03-26T15:22:45.136656+00:00"
+    },
+    {
+      "type": "SELL",
+      "condition_id": "0x337e5c84b83679d5557acafcf78b5c5d4d932b9fcd7dfba7966249d64f0f0a0f",
+      "question": "Will Bitcoin reach $80,000 in March?",
+      "side": "YES",
+      "price": 0.01,
+      "proceeds": 2.4096385542168677,
+      "shares": 240.96385542168676,
+      "pnl": -97.59,
+      "pnl_pct": -97.6,
+      "timestamp": "2026-03-27T18:50:07.281695+00:00"
+    },
+    {
+      "type": "SELL",
+      "condition_id": "0x36912c9832f0fd104d734b579fb9b3a1b31bbdc946a67356723407e3bdc96dbc",
+      "question": "Will Bitcoin dip to $65,000 in March?",
+      "side": "NO",
+      "price": 0.205,
+      "proceeds": 27.758970886932968,
+      "shares": 135.40961408259986,
+      "pnl": -72.24,
+      "pnl_pct": -72.2,
+      "timestamp": "2026-03-27T18:50:07.294291+00:00"
+    },
+    {
+      "type": "SELL",
+      "condition_id": "0x3c6bcb7da14ea576e5af25547dbd96f2bb24ac34e748e76aecff2ee9195dd1ac",
+      "question": "US x Iran ceasefire by March 31?",
+      "side": "YES",
+      "price": 0.0315,
+      "proceeds": 15.0,
+      "shares": 476.1904761904762,
+      "pnl": -35.0,
+      "pnl_pct": -70.0,
+      "timestamp": "2026-03-27T18:50:07.305081+00:00"
+    },
+    {
+      "type": "SELL",
+      "condition_id": "0x9352c559e9648ab4cab236087b64ca85c5b7123a4c7d9d7d4efde4a39c18056f",
+      "question": "Will the Iranian regime fall by June 30?",
+      "side": "YES",
+      "price": 0.205,
+      "proceeds": 3.3606557377049175,
+      "shares": 16.39344262295082,
+      "pnl": -1.64,
+      "pnl_pct": -32.8,
+      "timestamp": "2026-03-27T18:50:07.315754+00:00"
+    },
+    {
+      "type": "SELL",
+      "condition_id": "0xd94b47bdeba16ae948bfb147bda059f3543d6fca73291644dfff5268bba7a797",
+      "question": "Will Tucker Carlson win the 2028 US Presidential Election?",
+      "side": "NO",
+      "price": 0.966,
+      "proceeds": 4.961479198767334,
+      "shares": 5.136106831022085,
+      "pnl": -0.04,
+      "pnl_pct": -0.8,
+      "timestamp": "2026-03-27T18:50:07.326611+00:00"
+    },
+    {
+      "type": "SELL",
+      "condition_id": "0x4befb52f7cd2b606c63731ad74e677325ff0ed0f48f1104552a34f0f54619ea3",
+      "question": "Kharg Island no longer under Iranian control by March 31?",
+      "side": "YES",
+      "price": 0.065,
+      "proceeds": 2.8260869565217392,
+      "shares": 43.47826086956522,
+      "pnl": -2.17,
+      "pnl_pct": -43.5,
+      "timestamp": "2026-03-27T18:50:07.337427+00:00"
+    },
+    {
+      "type": "SELL",
+      "condition_id": "0x814657a16a3c5b39834864251372e30f68ddcd0f040c5c6a83a52cddb2c35226",
+      "question": "Will Crude Oil (CL) hit (HIGH) $110 by end of March?",
+      "side": "YES",
+      "price": 0.193,
+      "proceeds": 2.6584022038567494,
+      "shares": 13.774104683195592,
+      "pnl": -2.34,
+      "pnl_pct": -46.8,
+      "timestamp": "2026-03-27T18:50:07.348548+00:00"
+    },
+    {
+      "type": "SELL",
+      "condition_id": "0x0f49db97f71c68b1e42a6d16e3de93d85dbf7d4148e3f018eb79e88554be9f75",
+      "question": "Will Gavin Newsom win the 2028 Democratic presidential nomination?",
+      "side": "YES",
+      "price": 0.243,
+      "proceeds": 2.9877049180327866,
+      "shares": 12.295081967213115,
+      "pnl": -0.01,
+      "pnl_pct": -0.4,
+      "timestamp": "2026-03-27T19:10:09.017895+00:00"
+    }
+  ]
+}

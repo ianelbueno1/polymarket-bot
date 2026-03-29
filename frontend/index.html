@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polymarket Paper Trader</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #12121a;
+      --bg3: #1a1a28;
+      --border: #2a2a3a;
+      --text: #e0e0e8;
+      --text2: #8888aa;
+      --green: #00e676;
+      --green-dim: #00e67622;
+      --red: #ff5252;
+      --red-dim: #ff525222;
+      --blue: #448aff;
+      --blue-dim: #448aff22;
+      --yellow: #ffd740;
+      --purple: #b388ff;
+    }
+
+    body {
+      font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .header {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .header h1 span { color: var(--blue); }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .live-dot {
+      width: 8px; height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .status-text { color: var(--text2); font-size: 12px; }
+
+    /* MAIN LAYOUT */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .full-width { grid-column: 1 / -1; }
+
+    /* CARDS */
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-header h2 {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text2);
+    }
+
+    .card-body { padding: 18px; }
+
+    /* STATS ROW */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+    }
+
+    .stat {
+      background: var(--bg3);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text2);
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .stat-sub {
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .positive { color: var(--green); }
+    .negative { color: var(--red); }
+    .neutral { color: var(--text); }
+
+    /* TABLE */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      text-align: left;
+      padding: 10px 14px;
+      color: var(--text2);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    tr:hover td { background: var(--bg3); }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .tag-yes { background: var(--green-dim); color: var(--green); }
+    .tag-no { background: var(--red-dim); color: var(--red); }
+    .tag-buy { background: var(--blue-dim); color: var(--blue); }
+    .tag-sell { background: var(--purple); color: #000; }
+
+    /* BUTTONS */
+    .btn {
+      padding: 6px 14px;
+      border: none;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-buy { background: var(--green); color: #000; }
+    .btn-sell { background: var(--red); color: #fff; }
+    .btn-sm { padding: 4px 10px; font-size: 11px; }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text2);
+    }
+    .btn-outline:hover { border-color: var(--text); color: var(--text); }
+    .btn-outline.active { border-color: var(--blue); color: var(--blue); }
+
+    /* FILTER BAR */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 12px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 12px;
+      width: 200px;
+    }
+
+    .search-input:focus { outline: none; border-color: var(--blue); }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    .modal {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      width: 420px;
+      max-width: 90vw;
+    }
+
+    .modal h3 {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .modal p {
+      color: var(--text2);
+      font-size: 12px;
+      margin-bottom: 18px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 11px;
+      color: var(--text2);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .form-group input:focus, .form-group select:focus {
+      outline: none;
+      border-color: var(--blue);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 18px;
+    }
+
+    /* PRICE BAR */
+    .price-bar {
+      height: 6px;
+      background: var(--bg);
+      border-radius: 3px;
+      overflow: hidden;
+      width: 80px;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 6px;
+    }
+
+    .price-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.3s;
+    }
+
+    .price-bar-fill.green { background: var(--green); }
+    .price-bar-fill.red { background: var(--red); }
+
+    /* EMPTY STATE */
+    .empty {
+      text-align: center;
+      padding: 40px;
+      color: var(--text2);
+    }
+
+    .empty-icon { font-size: 32px; margin-bottom: 10px; }
+
+    /* SCROLLABLE */
+    .scrollable {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .scrollable::-webkit-scrollbar { width: 4px; }
+    .scrollable::-webkit-scrollbar-track { background: transparent; }
+    .scrollable::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .container { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1><span>POLY</span>TRADER <span style="font-size:11px;color:var(--text2);">PAPER MODE</span></h1>
+    <div class="header-right">
+      <div class="live-dot"></div>
+      <span class="status-text" id="lastUpdate">Cargando...</span>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="container">
+    <div class="card full-width">
+      <div class="card-body">
+        <div class="stats-row">
+          <div class="stat">
+            <div class="stat-label">Balance</div>
+            <div class="stat-value neutral" id="statBalance">$0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Invertido</div>
+            <div class="stat-value neutral" id="statInvested">$0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">P&L</div>
+            <div class="stat-value" id="statPnl">$0</div>
+            <div class="stat-sub" id="statPnlPct"></div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Valor Total</div>
+            <div class="stat-value neutral" id="statTotal">$0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Posiciones</div>
+            <div class="stat-value neutral" id="statPositions">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOT STATUS -->
+    <div class="card full-width">
+      <div class="card-header">
+        <h2>Auto Trader Bot</h2>
+        <span class="status-text" id="botStatus">--</span>
+      </div>
+      <div class="card-body">
+        <div class="stats-row" style="grid-template-columns: repeat(7, 1fr);">
+          <div class="stat">
+            <div class="stat-label">Win Rate</div>
+            <div class="stat-value" id="botWinRate">--</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Wins</div>
+            <div class="stat-value positive" id="botWins">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Losses</div>
+            <div class="stat-value negative" id="botLosses">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Bot P&L</div>
+            <div class="stat-value" id="botPnl">$0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Hoy P&L</div>
+            <div class="stat-value" id="botDailyPnl">$0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Trades Hoy</div>
+            <div class="stat-value neutral" id="botDailyTrades">0</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Signals</div>
+            <div class="stat-value neutral" id="botSignals">0</div>
+          </div>
+        </div>
+        <div class="scrollable" style="max-height:200px;margin-top:14px;" id="botLogsContent"></div>
+      </div>
+    </div>
+
+    <!-- POSITIONS -->
+    <div class="card full-width">
+      <div class="card-header">
+        <h2>Posiciones Abiertas</h2>
+      </div>
+      <div class="card-body">
+        <div id="positionsContent"></div>
+      </div>
+    </div>
+
+    <!-- MARKETS -->
+    <div class="card full-width">
+      <div class="card-header">
+        <h2>Mercados</h2>
+        <div class="filter-bar">
+          <input type="text" class="search-input" id="marketSearch" placeholder="Buscar mercado...">
+          <button class="btn btn-outline" data-cat="" onclick="filterCat(this)">All</button>
+          <button class="btn btn-outline" data-cat="bitcoin" onclick="filterCat(this)">Bitcoin</button>
+          <button class="btn btn-outline" data-cat="trump" onclick="filterCat(this)">Trump</button>
+          <button class="btn btn-outline" data-cat="fed" onclick="filterCat(this)">Fed</button>
+          <button class="btn btn-outline" data-cat="iran" onclick="filterCat(this)">Iran</button>
+          <button class="btn btn-outline" data-cat="world cup" onclick="filterCat(this)">World Cup</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="scrollable" id="marketsContent"></div>
+      </div>
+    </div>
+
+    <!-- TRADE HISTORY -->
+    <div class="card full-width">
+      <div class="card-header">
+        <h2>Historial de Trades</h2>
+        <span class="status-text" id="tradeCount"></span>
+      </div>
+      <div class="card-body">
+        <div class="scrollable" id="tradesContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUY MODAL -->
+  <div class="modal-overlay" id="buyModal">
+    <div class="modal">
+      <h3>Paper Buy</h3>
+      <p id="buyModalQuestion"></p>
+      <div class="form-group">
+        <label>Side</label>
+        <select id="buySide">
+          <option value="YES">YES</option>
+          <option value="NO">NO</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Monto (USDC)</label>
+        <input type="number" id="buyAmount" value="50" min="1" step="10">
+      </div>
+      <div style="font-size:12px;color:var(--text2);margin-top:8px;">
+        Precio: <span id="buyPrice">-</span> |
+        Shares: <span id="buyShares">-</span>
+      </div>
+      <input type="hidden" id="buyConditionId">
+      <div class="modal-actions">
+        <button class="btn btn-outline" onclick="closeBuyModal()">Cancelar</button>
+        <button class="btn btn-buy" onclick="executeBuy()">Comprar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = '';
+    let allMarkets = [];
+    let currentCategory = '';
+
+    // ==================== FETCH DATA ====================
+
+    async function fetchPortfolio() {
+      try {
+        const res = await fetch(`${API}/api/portfolio`);
+        const data = await res.json();
+        updateStats(data);
+        updatePositions(data.positions);
+      } catch (e) {
+        console.error('Portfolio fetch error:', e);
+      }
+    }
+
+    async function fetchBotStats() {
+      try {
+        const res = await fetch(`${API}/api/bot-stats`);
+        const data = await res.json();
+        updateBotStats(data);
+      } catch (e) {
+        console.error('Bot stats fetch error:', e);
+      }
+    }
+
+    async function fetchMarkets(category = '') {
+      try {
+        const url = category
+          ? `${API}/api/markets?category=${encodeURIComponent(category)}`
+          : `${API}/api/markets`;
+        const res = await fetch(url);
+        allMarkets = await res.json();
+        renderMarkets(allMarkets);
+      } catch (e) {
+        console.error('Markets fetch error:', e);
+      }
+    }
+
+    async function fetchTrades() {
+      try {
+        const res = await fetch(`${API}/api/trades`);
+        const data = await res.json();
+        renderTrades(data);
+      } catch (e) {
+        console.error('Trades fetch error:', e);
+      }
+    }
+
+    // ==================== RENDER ====================
+
+    function updateStats(data) {
+      document.getElementById('statBalance').textContent = `$${data.balance.toLocaleString()}`;
+      document.getElementById('statInvested').textContent = `$${data.total_invested.toLocaleString()}`;
+      document.getElementById('statTotal').textContent = `$${data.total_value.toLocaleString()}`;
+      document.getElementById('statPositions').textContent = data.positions.length;
+
+      const pnlEl = document.getElementById('statPnl');
+      const pnlPctEl = document.getElementById('statPnlPct');
+      const sign = data.total_pnl >= 0 ? '+' : '';
+      pnlEl.textContent = `${sign}$${data.total_pnl.toFixed(2)}`;
+      pnlEl.className = `stat-value ${data.total_pnl >= 0 ? 'positive' : 'negative'}`;
+      pnlPctEl.textContent = `${sign}${data.total_pnl_pct}%`;
+      pnlPctEl.className = `stat-sub ${data.total_pnl >= 0 ? 'positive' : 'negative'}`;
+
+      document.getElementById('lastUpdate').textContent =
+        `Actualizado: ${new Date().toLocaleTimeString()}`;
+    }
+
+    function updateBotStats(data) {
+      const wr = document.getElementById('botWinRate');
+      wr.textContent = `${data.win_rate}%`;
+      wr.className = `stat-value ${data.win_rate >= 55 ? 'positive' : data.win_rate > 0 ? 'negative' : 'neutral'}`;
+
+      document.getElementById('botWins').textContent = data.wins;
+      document.getElementById('botLosses').textContent = data.losses;
+
+      const pnl = document.getElementById('botPnl');
+      const sign = data.total_pnl >= 0 ? '+' : '';
+      pnl.textContent = `${sign}$${data.total_pnl.toFixed(2)}`;
+      pnl.className = `stat-value ${data.total_pnl >= 0 ? 'positive' : 'negative'}`;
+
+      const dpnl = document.getElementById('botDailyPnl');
+      const dsign = data.daily_pnl >= 0 ? '+' : '';
+      dpnl.textContent = `${dsign}$${data.daily_pnl.toFixed(2)}`;
+      dpnl.className = `stat-value ${data.daily_pnl >= 0 ? 'positive' : 'negative'}`;
+
+      document.getElementById('botDailyTrades').textContent = data.daily_trades;
+      document.getElementById('botSignals').textContent = data.signals_generated;
+
+      // Last scan status
+      const statusEl = document.getElementById('botStatus');
+      if (data.last_scan) {
+        const lastScan = new Date(data.last_scan);
+        const diff = Math.floor((Date.now() - lastScan.getTime()) / 1000);
+        statusEl.textContent = diff < 600
+          ? `Activo - ultimo scan hace ${diff}s`
+          : `Inactivo - ultimo scan hace ${Math.floor(diff/60)}min`;
+      } else {
+        statusEl.textContent = 'No iniciado';
+      }
+
+      // Bot logs
+      const logsEl = document.getElementById('botLogsContent');
+      if (data.recent_logs && data.recent_logs.length) {
+        let html = '<table><tr><th>Hora</th><th>Accion</th><th>Detalle</th><th>P&L</th></tr>';
+        data.recent_logs.forEach(log => {
+          const time = new Date(log.timestamp).toLocaleTimeString('es-AR', {hour:'2-digit',minute:'2-digit'});
+          const action = log.action;
+          const detail = (log.question || log.message || '').substring(0, 40);
+          let pnlHtml = '-';
+          if (log.pnl !== undefined) {
+            const s = log.pnl >= 0 ? '+' : '';
+            const c = log.pnl >= 0 ? 'positive' : 'negative';
+            pnlHtml = `<span class="${c}">${s}$${log.pnl.toFixed(2)}</span>`;
+          }
+          const tagClass = action === 'BUY' ? 'tag-buy' : action === 'EXIT' ? 'tag-sell' : '';
+          html += `<tr><td>${time}</td><td><span class="tag ${tagClass}">${action}</span></td><td>${detail}</td><td>${pnlHtml}</td></tr>`;
+        });
+        html += '</table>';
+        logsEl.innerHTML = html;
+      } else {
+        logsEl.innerHTML = '<div class="empty"><div>Bot sin actividad todavia</div></div>';
+      }
+    }
+
+    function updatePositions(positions) {
+      const el = document.getElementById('positionsContent');
+      if (!positions.length) {
+        el.innerHTML = `<div class="empty">
+          <div class="empty-icon">---</div>
+          <div>Sin posiciones abiertas. Comprá algo desde Mercados.</div>
+        </div>`;
+        return;
+      }
+
+      let html = `<table>
+        <tr>
+          <th>Mercado</th>
+          <th>Side</th>
+          <th>Entrada</th>
+          <th>Actual</th>
+          <th>Costo</th>
+          <th>Valor</th>
+          <th>P&L</th>
+          <th></th>
+        </tr>`;
+
+      positions.forEach(p => {
+        const sign = p.pnl >= 0 ? '+' : '';
+        const cls = p.pnl >= 0 ? 'positive' : 'negative';
+        const barWidth = Math.min(Math.abs(p.pnl_pct), 100);
+        const barColor = p.pnl >= 0 ? 'green' : 'red';
+
+        html += `<tr>
+          <td style="max-width:280px">${p.question}</td>
+          <td><span class="tag tag-${p.side.toLowerCase()}">${p.side}</span></td>
+          <td>$${p.avg_price.toFixed(3)}</td>
+          <td>$${p.current_price.toFixed(3)}</td>
+          <td>$${p.cost.toFixed(2)}</td>
+          <td>$${p.value.toFixed(2)}</td>
+          <td>
+            <span class="${cls}">${sign}$${p.pnl.toFixed(2)} (${sign}${p.pnl_pct}%)</span>
+            <div class="price-bar"><div class="price-bar-fill ${barColor}" style="width:${barWidth}%"></div></div>
+          </td>
+          <td><button class="btn btn-sell btn-sm" onclick="sellPosition('${p.key}')">Cerrar</button></td>
+        </tr>`;
+      });
+
+      html += '</table>';
+      el.innerHTML = html;
+    }
+
+    function renderMarkets(markets) {
+      const el = document.getElementById('marketsContent');
+      const search = document.getElementById('marketSearch').value.toLowerCase();
+
+      let filtered = markets;
+      if (search) {
+        filtered = markets.filter(m => m.question.toLowerCase().includes(search));
+      }
+
+      if (!filtered.length) {
+        el.innerHTML = '<div class="empty"><div>No se encontraron mercados</div></div>';
+        return;
+      }
+
+      let html = `<table>
+        <tr>
+          <th>Mercado</th>
+          <th>YES</th>
+          <th>NO</th>
+          <th>Vol 24h</th>
+          <th></th>
+        </tr>`;
+
+      filtered.forEach(m => {
+        const yesWidth = m.yes_price * 100;
+        html += `<tr>
+          <td style="max-width:350px">${m.question}</td>
+          <td>
+            <span class="positive">$${m.yes_price.toFixed(2)}</span>
+            <div class="price-bar"><div class="price-bar-fill green" style="width:${yesWidth}%"></div></div>
+          </td>
+          <td><span class="negative">$${m.no_price.toFixed(2)}</span></td>
+          <td>$${formatVol(m.volume24hr)}</td>
+          <td><button class="btn btn-buy btn-sm" onclick='openBuyModal(${JSON.stringify(m)})'>Buy</button></td>
+        </tr>`;
+      });
+
+      html += '</table>';
+      el.innerHTML = html;
+    }
+
+    function renderTrades(trades) {
+      const el = document.getElementById('tradesContent');
+      document.getElementById('tradeCount').textContent = `${trades.length} trades`;
+
+      if (!trades.length) {
+        el.innerHTML = '<div class="empty"><div>Sin trades todavía</div></div>';
+        return;
+      }
+
+      let html = `<table>
+        <tr>
+          <th>Fecha</th>
+          <th>Tipo</th>
+          <th>Mercado</th>
+          <th>Side</th>
+          <th>Precio</th>
+          <th>Monto</th>
+          <th>P&L</th>
+        </tr>`;
+
+      trades.forEach(t => {
+        const date = new Date(t.timestamp).toLocaleString('es-AR', {
+          day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+        });
+        const isBuy = t.type === 'BUY';
+        const typeTag = isBuy ? '<span class="tag tag-buy">BUY</span>' : '<span class="tag tag-sell">SELL</span>';
+        const amount = isBuy ? `$${t.amount?.toFixed(2) || '-'}` : `$${t.proceeds?.toFixed(2) || '-'}`;
+        let pnlHtml = '-';
+        if (!isBuy && t.pnl !== undefined) {
+          const sign = t.pnl >= 0 ? '+' : '';
+          const cls = t.pnl >= 0 ? 'positive' : 'negative';
+          pnlHtml = `<span class="${cls}">${sign}$${t.pnl.toFixed(2)}</span>`;
+        }
+
+        html += `<tr>
+          <td>${date}</td>
+          <td>${typeTag}</td>
+          <td style="max-width:250px">${(t.question || '').substring(0, 45)}</td>
+          <td><span class="tag tag-${(t.side || 'yes').toLowerCase()}">${t.side}</span></td>
+          <td>$${t.price?.toFixed(3) || '-'}</td>
+          <td>${amount}</td>
+          <td>${pnlHtml}</td>
+        </tr>`;
+      });
+
+      html += '</table>';
+      el.innerHTML = html;
+    }
+
+    // ==================== ACTIONS ====================
+
+    function openBuyModal(market) {
+      document.getElementById('buyModal').classList.add('show');
+      document.getElementById('buyModalQuestion').textContent = market.question;
+      document.getElementById('buyConditionId').value = market.id;
+      document.getElementById('buyPrice').textContent = `$${market.yes_price.toFixed(3)}`;
+      updateBuyShares();
+    }
+
+    function closeBuyModal() {
+      document.getElementById('buyModal').classList.remove('show');
+    }
+
+    function updateBuyShares() {
+      const amount = parseFloat(document.getElementById('buyAmount').value) || 0;
+      const priceText = document.getElementById('buyPrice').textContent.replace('$', '');
+      const price = parseFloat(priceText) || 0.5;
+      document.getElementById('buyShares').textContent = price > 0 ? (amount / price).toFixed(2) : '-';
+    }
+
+    document.getElementById('buyAmount')?.addEventListener('input', updateBuyShares);
+    document.getElementById('buySide')?.addEventListener('change', () => {
+      // Swap price when changing side
+      const market = allMarkets.find(m => m.id === document.getElementById('buyConditionId').value);
+      if (market) {
+        const side = document.getElementById('buySide').value;
+        const price = side === 'YES' ? market.yes_price : market.no_price;
+        document.getElementById('buyPrice').textContent = `$${price.toFixed(3)}`;
+        updateBuyShares();
+      }
+    });
+
+    async function executeBuy() {
+      const cid = document.getElementById('buyConditionId').value;
+      const amount = parseFloat(document.getElementById('buyAmount').value);
+      const side = document.getElementById('buySide').value;
+
+      try {
+        const res = await fetch(`${API}/api/buy`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ condition_id: cid, amount, side })
+        });
+        const data = await res.json();
+        if (data.error) {
+          alert(data.error);
+          return;
+        }
+        closeBuyModal();
+        refreshAll();
+      } catch (e) {
+        alert('Error ejecutando buy');
+      }
+    }
+
+    async function sellPosition(key) {
+      if (!confirm('Cerrar esta posición?')) return;
+      try {
+        const res = await fetch(`${API}/api/sell`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key })
+        });
+        const data = await res.json();
+        if (data.error) {
+          alert(data.error);
+          return;
+        }
+        refreshAll();
+      } catch (e) {
+        alert('Error cerrando posición');
+      }
+    }
+
+    function filterCat(btn) {
+      document.querySelectorAll('.filter-bar .btn-outline').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCategory = btn.dataset.cat;
+      fetchMarkets(currentCategory);
+    }
+
+    document.getElementById('marketSearch')?.addEventListener('input', () => {
+      renderMarkets(allMarkets);
+    });
+
+    // ==================== HELPERS ====================
+
+    function formatVol(v) {
+      if (v >= 1000000) return (v / 1000000).toFixed(1) + 'M';
+      if (v >= 1000) return (v / 1000).toFixed(0) + 'K';
+      return v.toFixed(0);
+    }
+
+    // ==================== REFRESH LOOP ====================
+
+    async function refreshAll() {
+      await Promise.all([fetchPortfolio(), fetchTrades(), fetchBotStats()]);
+    }
+
+    // Initial load
+    fetchPortfolio();
+    fetchMarkets();
+    fetchTrades();
+    fetchBotStats();
+
+    // Auto-refresh every 30 seconds
+    setInterval(() => {
+      fetchPortfolio();
+      fetchTrades();
+      fetchBotStats();
+    }, 30000);
+
+    // Refresh markets every 60 seconds
+    setInterval(() => fetchMarkets(currentCategory), 60000);
+  </script>
+
+</body>
+</html>
